@@ -1,7 +1,7 @@
-﻿#ifndef TESTTRISTATECHECKBOX_H
-#define TESTTRISTATECHECKBOX_H
+﻿#pragma once
 
 #include <QMainWindow>
+#include <QTreeWidgetItem>
 #include <map>
 #include <list>
 #include <memory>
@@ -36,9 +36,16 @@ private:
 
   void test();
   void setupSyncDataTree();
+  void checkuncheckSyncData(Qt::CheckState state);
   void createMapByCategory(std::list<Data> dataList);
   Qt::CheckState verifyCheckStatus(std::string category, std::string name = "");
 
-};
+private slots:
+    void on_actionCheckAll_triggered();
+    void on_actionUncheckAll_triggered();
+    void on_actionClear_triggered();
 
-#endif // TESTTRISTATECHECKBOX_H
+public slots:
+    void showFont(QTreeWidgetItem *item);
+    void updateStyles(QTreeWidgetItem *item, int column);
+};

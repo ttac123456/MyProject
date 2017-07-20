@@ -1,4 +1,6 @@
-﻿#include <QStandardItemModel>
+﻿//#include <QtWidgets>
+#include <QAction>
+#include <QStandardItemModel>
 #include <QTextCodec>
 #include <sstream>
 #include <iostream>
@@ -15,6 +17,14 @@ testTriStateCheckbox::testTriStateCheckbox(QWidget *parent) :
   test();
 
   setupSyncDataTree();
+
+  connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this, SLOT(showFont(QTreeWidgetItem*)));
+  connect(ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+          this, SLOT(updateStyles(QTreeWidgetItem*,int)));
+
+  ui->treeWidget->setItemSelected(ui->treeWidget->topLevelItem(0), true);
+  showFont(ui->treeWidget->topLevelItem(0));
 }
 
 testTriStateCheckbox::~testTriStateCheckbox()
@@ -189,4 +199,82 @@ Qt::CheckState testTriStateCheckbox::verifyCheckStatus(std::string category, std
     checkedStatus = Qt::PartiallyChecked;
 
   return checkedStatus;
+}
+
+void testTriStateCheckbox::on_actionClear_triggered()
+{
+    QTreeWidgetItem *currentItem = ui->treeWidget->currentItem();
+    foreach (QTreeWidgetItem *item, ui->treeWidget->selectedItems())
+        ui->treeWidget->setItemSelected(item, false);
+    ui->treeWidget->setItemSelected(currentItem, true);
+}
+
+void testTriStateCheckbox::on_actionCheckAll_triggered()
+{
+    checkuncheckSyncData(Qt::Checked);
+}
+
+void testTriStateCheckbox::on_actionUncheckAll_triggered()
+{
+    checkuncheckSyncData(Qt::Unchecked);
+}
+
+void testTriStateCheckbox::checkuncheckSyncData(Qt::CheckState state)
+{
+    QList<QTreeWidgetItem *> items = ui->treeWidget->selectedItems();
+    foreach (QTreeWidgetItem *item, items) {
+        if (item->checkState(0) != state)
+            item->setCheckState(0, state);
+    }
+}
+
+void testTriStateCheckbox::showFont(QTreeWidgetItem *item)
+{
+    if (!item)
+        return;
+
+//    QString family;
+//    QString style;
+//    int weight;
+//    bool italic;
+
+//    if (item->parent()) {
+//        family = item->parent()->text(0);
+//        style = item->text(0);
+//        weight = item->data(0, Qt::UserRole).toInt();
+//        italic = item->data(0, Qt::UserRole + 1).toBool();
+//    } else {
+//        family = item->text(0);
+//        style = item->child(0)->text(0);
+//        weight = item->child(0)->data(0, Qt::UserRole).toInt();
+//        italic = item->child(0)->data(0, Qt::UserRole + 1).toBool();
+//    }
+
+//    QString oldText = textEdit->toPlainText().trimmed();
+//    bool modified = textEdit->document()->isModified();
+//    textEdit->clear();
+//    QFont font(family, 32, weight, italic);
+//    font.setStyleName(style);
+//    textEdit->document()->setDefaultFont(font);
+
+//    QTextCursor cursor = textEdit->textCursor();
+//    QTextBlockFormat blockFormat;
+//    blockFormat.setAlignment(Qt::AlignCenter);
+//    cursor.insertBlock(blockFormat);
+
+//    if (modified)
+//        cursor.insertText(QString(oldText));
+//    else
+//        cursor.insertText(QString("%1 %2").arg(family).arg(style));
+
+//    textEdit->document()->setModified(modified);
+}
+
+void testTriStateCheckbox::updateStyles(QTreeWidgetItem *item, int column)
+{
+    if (!item || column != 0)
+        return;
+
+    Qt::CheckState state = item->checkState(0);
+    QTreeWidgetItem *parent = item->parent();
 }
