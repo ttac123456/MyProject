@@ -103,14 +103,14 @@ void testTriStateCheckbox::setupSyncDataTree()
       QTreeWidgetItem *syncDataTreeItemAlphabet = new QTreeWidgetItem(syncDataTreeItemCategory);
       syncDataTreeItemAlphabet->setText(0, QString(tc->toUnicode(firstAlphabet.c_str())));
       syncDataTreeItemAlphabet->setCheckState(0, Qt::Unchecked);
-      syncDataTreeItemAlphabet->setFlags(syncDataTreeItemAlphabet->flags() | Qt::ItemIsUserTristate);
+      syncDataTreeItemAlphabet->setFlags(syncDataTreeItemAlphabet->flags() | Qt::ItemIsAutoTristate);
 
       for (auto mapByName : mapByAlphabet.second){
         std::string name = mapByName.second->name;
         QTreeWidgetItem *syncDataTreeItemName = new QTreeWidgetItem(syncDataTreeItemAlphabet);
         syncDataTreeItemName->setText(0, QString(tc->toUnicode(name.c_str())));
         syncDataTreeItemName->setCheckState(0, Qt::Unchecked);
-        syncDataTreeItemName->setFlags(syncDataTreeItemName->flags() | Qt::ItemIsUserCheckable);
+        syncDataTreeItemName->setFlags(syncDataTreeItemName->flags() | Qt::ItemIsAutoTristate);
       }
     }
   }
